@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			.box{
+				width: 500px;
+				height: 300px;
+				border: solid 1px red;
+				margin: 50px auto;
+				position: relative;
+			}
+			.bubble{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				border-radius: 50%;
+				background-color: palevioletred;
+			}
+			.ball{
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background-color: yellow;
+				position: absolute;
+				left: 250px;
+				top: 150px;
+				margin-left: -25px;
+				margin-top: -25px;
+				}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<div class="ball"></div>
+		</div>
+		<script type="text/javascript">
+			window.onerror=function (){return true;}
+			var boxWidth=500;
+			var boxHeight=300;
+			var box=document.getElementsByClassName("box")[0];
+			var ball=document.getElementsByClassName("ball")[0];
+			var bubbles=[];	
+			function bubble(){
+				this.div=document.createElement("div");
+				this.w=Math.random()*20+20;
+				this.h=this.w;
+				this.x=Math.random()*(boxWidth-this.w);
+				this.y=Math.random()*(boxHeight-this.h);
+				this.d=Math.random()*360;
+				this.v=5;
+				this.speedx=Math.cos(Math.PI/180*this.d)*this.v;
+				this.speedy=Math.sin(Math.PI/180*this.d)*this.v;
+				//气泡属性
+				this.init=function(){
+					this.div.setAttribute("class","bubble");
+					this.div.style.width=this.w+"px";
+					this.div.style.height=this.h+"px";
+					this.div.style.left=this.x+"px";
+					this.div.style.top=this.y+"px";
+					
+					var a = Math.floor(Math.random() * 255);
+				    var b = Math.floor(Math.random() * 255);
+				    var c = Math.floor(Math.random() * 255);
+				    
+				   this.div.style.backgroundColor = "rgb(" + a + "," + b + "," + c + ")";
+//					this.div.style.opacity=Math.random();
+					box.appendChild(this.div);
+				}
+			
+			
+			
+				//气泡移动
+				this.moveing=function(){
+					var x=this.x+this.speedx;
+					var y=this.y+this.speedy;
+					this.setposition(x,y);
+				}
+				//气泡的位置
+				this.setposition=function(x,y){
+				 this.x=x;
+				 this.y=y;
+				 if((this.x<0)||(this.x>(boxWidth-this.w))) {
+						this.speedx=this.speedx*-1;
+//						while((this.x<0)||(this.x>(boxWidth-this.w))) 
+						this.moveing();
+					}
+				 if((this.y<0)||(this.y>(boxHeight-this.h))) {
+						this.speedy=this.speedy*-1;
+//					while((this.y<0)||(this.y>(boxHeight-this.h))) 
+					this.moveing();
+					}
+					this.div.style.left=this.x+"px";
+					this.div.style.top=this.y+"px";	
+				}
+				//判断气泡是否碰撞
+				this.check=function(){
+					for(var i=0;i<bubbles.length;i++){
+					if(this!=bubbles[i]){
+
+					//两球圆心距离
+					var R=Math.pow((this.x+this.w/2)-(bubbles[i].x+bubbles[i].w/2),2)+Math.pow((this.y+this.h/2)-(bubbles[i].y+bubbles[i].h/2),2);
+					var L=Math.pow((this.w+bubbles[i].w)/2,2);
+					if(R<=L) {return bubbles[i];}
+				
+					
+					}
+				}
+					
+				 return null;	
+			}
+				//改变气泡运动方向
+				this.bomb=function(){
+					var qipao=this.check();
+					if(qipao!=null){
+						var tmp=this.speedx;
+						this.speedx=qipao.speedx;
+						qipao.speedx=tmp;
+						var tmp=this.speedy;
+						this.speedy=qipao.speedy;
+						qipao.speedy=tmp;
+						while(this.check()!=null) {
+							this.moveing();
+						}
+						
+					}
+				}
+				
+					
+			//黄球移动	
+			var ballWidth=50;
+		    var ballHeight=50;
+		    var X=0;
+		    var Y=0;
+		    box.onmousemove=function(e){
+			X=e.pageX-box.offsetLeft;
+		    Y=e.pageY-box.offsetTop;
+			if(X>boxWidth-ballWidth/2) X=boxWidth-ballWidth/2;
+			if(X<0) X=ballWidth/2;
+			if(Y>boxHeight-ballHeight/2) Y=boxHeight-ballHeight/2;
+			if(Y<0) Y=ballHeight/2;
+			
+			ball.style.left=X+"px";
+			ball.style.top=Y+"px";
+	}
+			
+			this.clicks=function(){
+					for(var i=0;i<bubbles.length;i++){
+					//两球圆心距离
+					var R1=Math.pow((ballWidth/2+X)-(bubbles[i].x+bubbles[i].w/2),2)+Math.pow((Y+ballHeight/2)-(bubbles[i].y+bubbles[i].h/2),2);
+					var L1=Math.pow((ballWidth+bubbles[i].w)/2,2);
+					if(R1<=L1) return bubbles[i];
+					
+				}
+					
+				 return null;	
+				}
+			
+			
+			this.bombs=function(){
+					var qipao=this.clicks();
+					if(qipao!=null){
+					    qipao.speedx=qipao.speedx*-1;
+						qipao.speedy=qipao.speedy*-1;
+						while(this.clicks()!=null) {
+							this.moveing();
+						}
+						
+					}
+				}
+			
+					
+				
+	}
+			
+		
+		for(var i=0;i<30;i++){
+		var qipao=new bubble();	
+			qipao.init();
+		    bubbles.push(qipao);
+		};		
+		
+		
+		setInterval(function(){
+				for(var i=0;i<bubbles.length;i++){
+					bubbles[i].moveing();
+					bubbles[i].bomb();
+					bubbles[i].bombs();
+
+				}
+				
+			},100);
+			
+			
+		</script>
+	</body>
+</html>
