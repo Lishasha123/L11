@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function animals(){
+				this.head="头";
+				this.leg="四条腿";
+				this.name="动物";
+				this.running=function(){
+					console.log("奔跑");
+				}
+			}
+			
+			function cow(){
+				this.__proto__= new animals();
+				this.name="牛";
+			}
+			
+			var p=new cow();
+			console.log(p.leg);
+			
+			
+			
+			var dog={
+				name:"大黄",
+				age:12,
+				sex:"boy"
+			}
+			console.log(dog.name);
+			console.log(dog["age"]);
+			for(d in dog){
+				console.log(d);
+				console.log(dog[d]);
+			}
+			console.log("name" in dog);
+			console.log("color" in dog);
+			console.log("toString" in dog);//toString 包含在  Object里
+			console.log(dog.hasOwnProperty("name"));//true
+			console.log(dog.hasOwnProperty("toString"));//false
+			
+			
+			
+		var xiaoming= {
+         name : "小明",
+         weibo : '@niyuinlong',
+         birth:2005,
+         get age() {
+          return new Date().getFullYear() - this.birth;
+        },
+         set age(val) {
+         	if(!/^\d*$/.test(val)){
+         		console.log("格式不对");
+         	}else{
+         		this.birth=new Date().getFullYear() - val;
+        
+         	}
+//      console.log('Age can\'t be set to ' + val);
+        }
+    }
+      console.log(xiaoming.age);
+         xiaoming.age=15;
+      console.log(xiaoming.age)
+      console.log(xiaoming);
+		</script>
+	</body>
+</html>

@@ -17,8 +17,7 @@
 				left: 0px;
 				top: 0px;
 				border-radius: 50%;
-				background-image: url(img/blue.png);
-				background-size: contain;
+				background-color: palevioletred;
 			}
 			
 		</style>
@@ -28,11 +27,11 @@
 			
 		</div>
 		<script type="text/javascript">
-			window.onerror=function (){return true;}
+			
 			var boxWidth=500;
 			var boxHeight=300;
 			var box=document.getElementsByClassName("box")[0];
-			var ball=document.getElementsByClassName("ball")[0];
+			
 			var bubbles=[];	
 			function bubble(){
 				this.div=document.createElement("div");
@@ -52,11 +51,11 @@
 					this.div.style.left=this.x+"px";
 					this.div.style.top=this.y+"px";
 					
-//					var a = Math.floor(Math.random() * 255);
-//				    var b = Math.floor(Math.random() * 255);
-//				    var c = Math.floor(Math.random() * 255);
-//				    
-//				   this.div.style.backgroundColor = "rgb(" + a + "," + b + "," + c + ")";
+					var a = Math.floor(Math.random() * 255);
+				    var b = Math.floor(Math.random() * 255);
+				    var c = Math.floor(Math.random() * 255);
+				    
+				   this.div.style.backgroundColor = "rgb(" + a + "," + b + "," + c + ")";
 //					this.div.style.opacity=Math.random();
 					box.appendChild(this.div);
 				}
@@ -67,31 +66,26 @@
 				this.moveing=function(){
 					var x=this.x+this.speedx;
 					var y=this.y+this.speedy;
-					this.setPosition(x,y);
+					this.setposition(x,y);
 				}
 				//气泡的位置
-				this.setPosition=function(x,y){
+				this.setposition=function(x,y){
 				 this.x=x;
 				 this.y=y;
 				 if((this.x<0)||(this.x>(boxWidth-this.w))) {
 						this.speedx=this.speedx*-1;
-						
 					}
-				
+				 while((this.x<0)||(this.x>(boxWidth-this.w))){
+					    this.x+=this.speedx;
+						this.div.style.left=this.x+"px";
+					}
 				 if((this.y<0)||(this.y>(boxHeight-this.h))) {
 						this.speedy=this.speedy*-1;
-					
 					}
-				  while((this.x<0)||(this.x>(boxWidth-this.w))) {
-						this.x=this.x+this.speedx;
-						this.div.style.left=this.x+"px";
-						}
 				 while((this.y<0)||(this.y>(boxHeight-this.h))){ 
-					this.y=this.y+this.speedy;
-					this.div.style.top=this.y+"px";	
-					
+					  this.y+=this.speedy;
+					  this.div.style.top=this.y+"px";
 					}
-				 
 					this.div.style.left=this.x+"px";
 					this.div.style.top=this.y+"px";	
 				}
@@ -104,7 +98,9 @@
 					var R=Math.pow((this.x+this.w/2)-(bubbles[i].x+bubbles[i].w/2),2)+Math.pow((this.y+this.h/2)-(bubbles[i].y+bubbles[i].h/2),2);
 					var L=Math.pow((this.w+bubbles[i].w)/2,2);
 					if(R<=L) {return bubbles[i];}
-				 }
+				
+					
+					}
 				}
 					
 				 return null;	
@@ -125,44 +121,44 @@
 						
 					}
 				}
-				
-		this.init();			
-	
+		this.init();		
+		
 	}
 			
 		
-		for(var i=0;i<10;i++){
+		for(var i=0;i<20;i++){
 		var qipao=new bubble();	
 		    bubbles.push(qipao);
 		};		
-		
-				//黄球移动	
-        var redOne = {
-				moveing:function(){},
-				setPosition:function(x,y){
-					// 越界操作
-					this.x = x<0?0:x;
-					this.x = x>(boxWidth-this.w)?boxWidth-this.w:x;
-					this.y = y<0?0:y;
-					this.y = y>(boxHeight-this.h)?boxHeight-this.h:y;
-					this.div.style.top = this.y+"px";
-					this.div.style.left = this.x+"px";
-				},
-				check:function(){},
-				bomb:function(){}
-			}
-				
-			bubbles.push(redOne);
-			redOne.__proto__ = new bubble();
-			redOne.div.style.backgroundImage = "url(./img/red.png)";
+		 var balls={
+		 	moveing:function(){},
+		 	setposition:function(x,y){
+		 	this.x = x>(boxWidth-this.w)?boxWidth-this.w:x;
+		 	this.x=x<0?this.w:x;
+		 	this.y=y>(boxHeight-this.h)?(boxHeight-this.h):y;
+		 	this.y=y<0?this.h:y;
+	        this.div.style.top = this.y+"px";
+			this.div.style.left = this.x+"px";
 			
-			box.onmousemove = function(e){
+		 	},
+		 	check:function(){},
+		 	bomb:function(){}
+		 }
+		   bubbles.push(balls);
+		   balls.__proto__ = new bubble();
+		   balls.div.style.backgroundColor="pink";
+		   
+		   
+		    box.onmousemove = function(e){
 				var x = e.pageX - this.offsetLeft;
 				var y = e.pageY - this.offsetTop;
-				redOne.setPosition(x,y);
+				balls.setposition(x,y);
+				
 			}
 		
 		
+					
+				
 		setInterval(function(){
 				for(var i=0;i<bubbles.length;i++){
 					bubbles[i].moveing();
